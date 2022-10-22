@@ -24,15 +24,25 @@ namespace KVA {
 
     void BinTree::insert(std::string _data) {
         root = insertNode(root, _data);
+        empty = false;
     }
 
 
     void BinTree::print(int n) {
-        Node::print(root, n);
+        if (!empty) {
+            Node::print(root, n);
+        }
     }
 
     void BinTree::deleteEl(std::string _data) {
         root = deleteNode(root, _data);
+        if (!root) empty = true;
 
+    }
+
+    void BinTree::clearTree() {
+        DestroyNode(root);
+        empty = true;
+        BinTree();
     }
 } // KVA

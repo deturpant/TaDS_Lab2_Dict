@@ -20,10 +20,11 @@ namespace KVA {
         void print(int n);
 
         void deleteEl(std::string _data);
+        void clearTree();
 
     private:
         Node *root;
-
+        bool empty = true;
         void DestroyNode(Node *node);
     };
 
