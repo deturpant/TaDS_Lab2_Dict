@@ -4,7 +4,9 @@
 
 #ifndef TADS_LAB2_NODE_H
 #define TADS_LAB2_NODE_H
+
 #include <string>
+
 namespace KVA {
 
     class Node {
@@ -12,8 +14,16 @@ namespace KVA {
         std::string data = "";
         Node *left = nullptr;
         Node *right = nullptr;
-        Node* insertNode(Node* _root, std::string _data);
+
+        Node *insertNode(Node *_root, std::string _data);
+
         void print(Node *t, int n);
+
+        Node *deleteNode(Node *_root, std::string _data);
+
+        Node *GetMinimum(Node *_root);
+
+        Node *GetMaximum(Node *_root);
     };
 
 } // KVA

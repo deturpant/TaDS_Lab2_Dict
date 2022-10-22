@@ -22,12 +22,17 @@ namespace KVA {
         }
     }
 
-    void BinTree::insert(std::string data) {
-        root = insertNode(root, data);
+    void BinTree::insert(std::string _data) {
+        root = insertNode(root, _data);
     }
 
 
     void BinTree::print(int n) {
         Node::print(root, n);
+    }
+
+    void BinTree::deleteEl(std::string _data) {
+        root = deleteNode(root, _data);
+
     }
 } // KVA

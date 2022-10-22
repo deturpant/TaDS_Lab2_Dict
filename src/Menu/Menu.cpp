@@ -3,7 +3,7 @@
 #include <vector>
 
 namespace KVA {
-    Menu::Menu(std::string lable, func function) { 
+    Menu::Menu(std::string lable, func function) {
         this->lable = lable;
         this->function = function;
     }
@@ -13,7 +13,7 @@ namespace KVA {
         this->menus = menus;
     }
 
-    Menu::Menu(const Menu& menu) {
+    Menu::Menu(const Menu &menu) {
         this->lable = menu.lable;
         this->menus = menu.menus;
         this->function = menu.function;
@@ -38,7 +38,6 @@ namespace KVA {
                     flag = false;
                 } else {
                     // run submenu
-                    menus[select].run(params);
                 }
 
             } else {

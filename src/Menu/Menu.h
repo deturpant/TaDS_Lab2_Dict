@@ -1,4 +1,5 @@
 #pragma once
+
 #include <iostream>
 #include <string>
 #include <any>
@@ -7,36 +8,41 @@
 namespace KVA {
 
     class Menu {
-        public:
-            using func = void(*)(std::vector<std::any>);
-            Menu(std::string lable, func function);
-            Menu(std::string lable, std::vector<Menu> menus);
-            Menu(const Menu& menu);
+    public:
+        using func = void (*)(std::vector<std::any>);
 
-            void run(std::vector<std::any> params);
-            void printMenu();
-            std::string getLable();
+        Menu(std::string lable, func function);
 
-            template<typename T>
-            static T input() {
-                T num = 0;
-                bool flag = true;
-                while (flag) {
-                    if (std::cin >> num) {
-                        flag = false;
-                    } else {
-                        std::cin.clear();
-                        while (std::cin.get() != '\n');
-                    }
+        Menu(std::string lable, std::vector<Menu> menus);
+
+        Menu(const Menu &menu);
+
+        void run(std::vector<std::any> params);
+
+        void printMenu();
+
+        std::string getLable();
+
+        template<typename T>
+        static T input() {
+            T num = 0;
+            bool flag = true;
+            while (flag) {
+                if (std::cin >> num) {
+                    flag = false;
+                } else {
+                    std::cin.clear();
+                    while (std::cin.get() != '\n');
                 }
-
-                return num;
             }
 
-        private:
+            return num;
+        }
 
-            std::string lable{};
-            std::vector<Menu> menus{};
-            func function = nullptr;
+    private:
+
+        std::string lable{};
+        std::vector<Menu> menus{};
+        func function = nullptr;
     };
 }
