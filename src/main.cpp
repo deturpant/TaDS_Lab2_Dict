@@ -3,82 +3,39 @@
 #include "Menu/MyMenu.h"
 #include "BinTree/BinTree.h"
 #include <string>
-#include <vector>
 #include <any>
-#include <limits>
 
 using namespace KVA;
 
-
-void printTree(BinTree* bt) {
-
-    bt->print(10);
+void addToTree(any& param) {
+    auto * bt = any_cast<BinTree*>(param);
+    std::cout << "Пожалуйста, введите новое слово  --> ";
+    std::string _data;
+    std::cin >> _data;
+    bt->insert(_data);
+    std::cout << "Слово успешно добавлено!\n";
 }
-void clearCIN() {
-    std::cin.clear();
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-    std::cin.clear();
-}
-void startMenu(BinTree* bt) {
-    while (true) {
-        std::cout << "Меню приложения\n"
-                     "1. Добавить новое слово в словарь\n"
-                     "2. Проверить слово на предмет нахождения в словаре\n"
-                     "3. Начать проверку правописания\n"
-                     "4. Удалить слово из словаря\n"
-                     "5. Очистить словарь.\n"
-                     "0. Выход.\n--> ";
-        int num{};
-        std::cin >> num;
-        switch(num) {
-            case 1: {
-                std::cout << "Пожалуйста, введите новое слово  --> ";
-                std::string _data;
-                std::cin >> _data;
-                bt->insert(_data);
-                std::cout << "Слово успешно добавлено!\n";
-                break;
-            }
-            case 2:
-                //pass
-                bt->print(10);
-                break;
-            case 3:
-                //pass
-                break;
-            case 4: {
-                std::cout << "Пожалуйста, введите слово для удаления  --> ";
-                std::string _data;
-                std::cin >> _data;
-                //нужно допилить!
-                bt->deleteEl(_data);
-                break;
-            }
-            case 5: {
-                bt->clearTree();
-                std::cout << "Дерево очищено!\n";
-                break;
-            }
-
-            case 0:
-                //допилить выгрузку в файл
-                exit(0);
-                break;
-            default:
-                break;
-
-
-        }
-    }
-}
-void func1(any& param) {
-    cout << "hello world";
+void printTree(any& param) {
     auto * bt = any_cast<BinTree*>(param);
     bt->print(10);
 }
-void func2(any& param) {}
+void deleteEl(any& param) {
+    auto * bt = any_cast<BinTree*>(param);
+    std::cout << "Пожалуйста, введите слово для удаления  --> ";
+    std::string _data;
+    std::cin >> _data;
+    //нужно допилить!
+    bt->deleteEl(_data);
+}
+void clearTree(any&param) {
+    auto * bt = any_cast<BinTree*>(param);
+    bt->clearTree();
+    cout << "Очистка дерева завершена.\n";
+}
 
 string MyException::file_name = "logs.txt";
+const int ITEMS_MENU = 4;
+
 int main(int argc, char *argv[]) {
     std::string load_data_file = "data1.txt";
     std::string write_data_file = "data2.txt";
@@ -91,13 +48,14 @@ int main(int argc, char *argv[]) {
     MyException::setFileName(log_data_file);
 
     BinTree* bt = new BinTree();
-    MenuItem items[2] {
-        MenuItem{"Add", func1},
-        MenuItem{"Delete", func2}
+    MenuItem items[ITEMS_MENU] {
+        MenuItem{"Добавить слово в словарь", addToTree},
+        MenuItem{"Распечатать словарь", printTree},
+        MenuItem{"Удалить слово из словаря", deleteEl},
+        MenuItem{"Очистить словарь", clearTree}
     };
-    MyMenu menu("Main menu", items, 2);
+    MyMenu menu("Main menu", items, ITEMS_MENU);
     any param = bt;
-    bt->insert("1");
     while (true) {
         try {
             menu.runCommand(param);

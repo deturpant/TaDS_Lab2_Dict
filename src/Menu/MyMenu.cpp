@@ -19,10 +19,11 @@ namespace KVA {
     }
 
     void MyMenu::runCommand(any &param) {
+        cout << "\n";
         print();
         cout << "\nSelect ==> ";
         cin >> m_select;
-        if (m_select > m_count || m_select < 0) {
+        if (m_select > m_count || m_select <= 0) {
             throw MyException{"Wrong index command in menu"};
         }
 

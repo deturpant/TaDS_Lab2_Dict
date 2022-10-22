@@ -42,7 +42,7 @@ namespace KVA {
 
     void BinTree::clearTree() {
         DestroyNode(root);
+        root = nullptr;
         empty = true;
-        BinTree();
     }
 } // KVA
