@@ -77,7 +77,19 @@ void func1(any& param) {
     bt->print(10);
 }
 void func2(any& param) {}
+
+string MyException::file_name = "logs.txt";
 int main(int argc, char *argv[]) {
+    std::string load_data_file = "data1.txt";
+    std::string write_data_file = "data2.txt";
+    std::string log_data_file = "logs.txt";
+    if (argc >=3) {
+        load_data_file = argv[1];
+        write_data_file = argv[2];
+        log_data_file = argv[3];
+    }
+    MyException::setFileName(log_data_file);
+
     BinTree* bt = new BinTree();
     MenuItem items[2] {
         MenuItem{"Add", func1},
@@ -87,22 +99,14 @@ int main(int argc, char *argv[]) {
     any param = bt;
     bt->insert("1");
     while (true) {
-        menu.runCommand(param);
+        try {
+            menu.runCommand(param);
+        }
+        catch (const MyException &ex) {
+            cout << "Error: " << ex.getError() << "\n";
+        }
     }
 
 
-
-    /*
-    std::string load_data_file = "data1.txt";
-    std::string write_data_file = "data2.txt";
-    std::string log_data_file = "logs.txt";
-    if (argc >=3) {
-        load_data_file = argv[1];
-        write_data_file = argv[2];
-        log_data_file = argv[3];
-    }
-    BinTree* bt = new KVA::BinTree();
-    startMenu(bt);
-*/
     return 0;
 }

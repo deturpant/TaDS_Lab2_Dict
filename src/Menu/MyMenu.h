@@ -6,7 +6,7 @@
 #define TADS_LAB2_MYMENU_H
 
 #include "MenuItem.h"
-
+#include "../Exceptions/MyException.h"
 namespace KVA {
 
     class MyMenu {

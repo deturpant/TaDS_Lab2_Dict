@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string>
 #include <any>
+#include "../Exceptions/MyException.h"
 
 using namespace std;
 namespace KVA {

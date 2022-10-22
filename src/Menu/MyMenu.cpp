@@ -23,9 +23,9 @@ namespace KVA {
         cout << "\nSelect ==> ";
         cin >> m_select;
         if (m_select > m_count || m_select < 0) {
-            cout << "Неверный индекс команды\n";
-
+            throw MyException{"Wrong index command in menu"};
         }
+
         return m_items[m_select - 1].run(param);
 
     }

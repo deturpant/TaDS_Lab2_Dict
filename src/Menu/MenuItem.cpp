@@ -9,7 +9,7 @@ namespace KVA {
     }
 
     void MenuItem::run(any &param) {
-        return func(param);
+            return func(param);
     }
 
     void MenuItem::print() {
