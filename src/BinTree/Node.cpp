@@ -4,7 +4,8 @@
 
 #include "Node.h"
 #include <iostream>
-#include <sstream>
+#include <vector>
+
 namespace KVA {
     Node *Node::insertNode(Node *_root, std::string _data) {
         if (_root == nullptr) {
@@ -33,10 +34,20 @@ namespace KVA {
         }
 
     }
-    Node *Node::findElement(KVA::Node *_root, std::string _data, std::string out) {
+    Node *Node::findElement(KVA::Node *_root, std::string _data, std::string out, std::vector<std::string> list) {
+        if (_root!=nullptr && checkWords(_data, _root->data) <= 3 && checkWords(_data, _root->data) > 0) {
+            list.push_back(_root->data);
+        }
         if (_root == nullptr) {
             if (out=="") {
                 std::cout << "Слово отсуствует в словаре!\n";
+            }
+            if (list.size()>0) {
+                std::cout << "Обнаружены похожие слова:\n";
+                for (auto s : list) {
+                    std::cout << s << std::endl;
+                }
+                std::cout << std::endl;
             }
             return nullptr;
         }
@@ -46,11 +57,11 @@ namespace KVA {
             return _root;
         }
         if (_data < _root->data) {
-            _root->left = findElement(_root->left, _data, out);
+            _root->left = findElement(_root->left, _data, out, list);
             return _root;
         }
         if (_data > _root->data) {
-            _root->right = findElement(_root->right, _data, out);
+            _root->right = findElement(_root->right, _data, out, list);
             return _root;
         }
         return _root;
@@ -98,4 +109,31 @@ namespace KVA {
         }
         return GetMaximum(_root->right);
     }
+
+    int Node::checkWords(std::string data1, std::string data2) {
+        const char* cs1 = data1.c_str();
+        const char* cs2 = data2.c_str();
+        if (data1.length()!= data2.length()) {
+            return -1;
+        }
+        int counter{};
+        for (int i = 0; i<data2.length(); i++) {
+            if (data1[i] == data2[i]) {
+                counter++;
+            }
+        }
+
+        return (data1.length() - counter);
+    }
+    /*int Node::length(const char* string_ptr){
+        int count = 0;
+        constchar *p = string_ptr;
+        while (*p != 0)
+        {
+            if ((*p & 0x80) == 0 || (*p & 0xc0) == 0xc0)
+                count++;
+            p++;
+        }
+        return count;
+    }*/
 } // KVA

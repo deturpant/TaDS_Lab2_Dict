@@ -5,22 +5,34 @@
 #include <string>
 #include <any>
 #include <fstream>
+#include <cstring>
+
+#define LOAD_TREE auto *bt = any_cast<BinTree *>(param);
 
 using namespace KVA;
 
-void loadDict(any &param) {
-    auto *bt = any_cast<BinTree *>(param);
+void loadDictSmall(any &param) {
+    LOAD_TREE
     fstream file;
     string s;
-    file.open("itog.txt"); //работает
+    file.open("itog.txt");
     while (getline(file, s)) {
         bt->insert(s);
     }
     file.close();
 }
-
+void loadDictBig(any &param) {
+    LOAD_TREE
+    fstream file;
+    string s;
+    file.open("big-r.txt");
+    while (getline(file, s)) {
+        bt->insert(s);
+    }
+    file.close();
+}
 void addToTree(any &param) {
-    auto *bt = any_cast<BinTree *>(param);
+    LOAD_TREE
     std::cout << "Пожалуйста, введите новое слово  --> ";
     std::string _data;
     std::cin >> _data;
@@ -45,7 +57,7 @@ void SaveData(string file_name, BinTree *bt) {
     file.close();
 }
 void printTree(any &param) {
-    auto *bt = any_cast<BinTree *>(param);
+    LOAD_TREE
     if (bt->getCountElement() == 0) cout << "Словарь пуст.\n";
     else if (bt->getCountElement() > 20) {
         cout
@@ -66,7 +78,7 @@ void printTree(any &param) {
 }
 
 void deleteEl(any &param) {
-    auto *bt = any_cast<BinTree *>(param);
+    LOAD_TREE
     std::cout << "Пожалуйста, введите слово для удаления  --> ";
     std::string _data;
     std::cin >> _data;
@@ -76,13 +88,13 @@ void deleteEl(any &param) {
 }
 
 void clearTree(any &param) {
-    auto *bt = any_cast<BinTree *>(param);
+    LOAD_TREE
     bt->clearTree("");
     cout << "Очистка словаря завершена.\n";
 }
 
 void getCountWord(any &param) {
-    auto *bt = any_cast<BinTree *>(param);
+    LOAD_TREE
     if (bt->getCountElement() != 0) {
         cout << "Количество слов в словаре: " << bt->getCountElement() << " слов.\n";
     } else {
@@ -91,7 +103,7 @@ void getCountWord(any &param) {
 }
 
 void checkWord(any &param) {
-    auto *bt = any_cast<BinTree *>(param);
+    LOAD_TREE
     std::cout << "Пожалуйста, введите слово для проверки  --> ";
     std::string _data;
     std::cin >> _data;
@@ -99,14 +111,14 @@ void checkWord(any &param) {
 }
 
 void ext(any& param) {
-    auto *bt = any_cast<BinTree *>(param);
+    LOAD_TREE
     cout << "Выполняется сохранение данных в выходной файл";
     SaveData("data2.txt", bt);
     exit(0);
 }
 
 string MyException::file_name = "logs.txt";
-const int ITEMS_MENU = 8;
+const int ITEMS_MENU = 9;
 
 int main(int argc, char *argv[]) {
     std::string load_data_file = "data1.txt";
@@ -118,7 +130,6 @@ int main(int argc, char *argv[]) {
         log_data_file = argv[3];
     }
     MyException::setFileName(log_data_file);
-
     BinTree *bt = new BinTree();
     InitData(load_data_file, bt);
     MenuItem items[ITEMS_MENU]{
@@ -126,7 +137,8 @@ int main(int argc, char *argv[]) {
             MenuItem{"Распечатать словарь", printTree},
             MenuItem{"Удалить слово из словаря", deleteEl},
             MenuItem{"Очистить словарь", clearTree},
-            MenuItem{"Загрузить в словарь существительные (51301 слово)", loadDict},
+            MenuItem{"Загрузить в словарь существительные (51.000+ слов)", loadDictSmall},
+            MenuItem{"Загрузить в словарь 1.500.000+ русских слов", loadDictBig},
             MenuItem{"Получить количество слов в словаре", getCountWord},
             MenuItem{"Проверить правописание слова", checkWord},
             MenuItem{"Выход из программы", ext}
