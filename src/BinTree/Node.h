@@ -14,7 +14,6 @@ namespace KVA {
         std::string data = "";
         Node *left = nullptr;
         Node *right = nullptr;
-
         Node *insertNode(Node *_root, std::string _data);
 
         void print(Node *t, int n);
@@ -24,6 +23,7 @@ namespace KVA {
         Node *GetMinimum(Node *_root);
 
         Node *GetMaximum(Node *_root);
+        Node *findElement(Node *_root, std::string _data, std::string out);
     };
 
 } // KVA

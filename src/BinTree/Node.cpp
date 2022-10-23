@@ -4,7 +4,7 @@
 
 #include "Node.h"
 #include <iostream>
-
+#include <sstream>
 namespace KVA {
     Node *Node::insertNode(Node *_root, std::string _data) {
         if (_root == nullptr) {
@@ -33,7 +33,29 @@ namespace KVA {
         }
 
     }
+    Node *Node::findElement(KVA::Node *_root, std::string _data, std::string out) {
+        if (_root == nullptr) {
+            if (out=="") {
+                std::cout << "Слово отсуствует в словаре!\n";
+            }
+            return nullptr;
+        }
+        if (_data == _root->data) {
+            out = "Слово обнаружено в словаре. Правописание выполнено верно: ";
+            std::cout << out << _data << "\n";
+            return _root;
+        }
+        if (_data < _root->data) {
+            _root->left = findElement(_root->left, _data, out);
+            return _root;
+        }
+        if (_data > _root->data) {
+            _root->right = findElement(_root->right, _data, out);
+            return _root;
+        }
+        return _root;
 
+    }
     Node *Node::deleteNode(Node *_root, std::string _data) {
         if (_root == nullptr) {
             return nullptr;

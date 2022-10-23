@@ -21,11 +21,15 @@ namespace KVA {
 
         void deleteEl(std::string _data);
         void clearTree();
+        void findElement(std::string _data);
+
+        int getCountElement() const;
 
     private:
         Node *root;
         bool empty = true;
         void DestroyNode(Node *node);
+        int countElement{};
     };
 
 } // KVA
