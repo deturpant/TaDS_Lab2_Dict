@@ -11,16 +11,21 @@ namespace KVA {
     }
 
     BinTree::~BinTree() {
-        DestroyNode(root);
+        DestroyNode(root, "");
     }
 
-    void BinTree::DestroyNode(Node *node) {
+    std::string BinTree::DestroyNode(Node *node, std::string out) {
         if (node) {
-            DestroyNode(node->left);
-            DestroyNode(node->right);
+            if (node->state == false) {
+                out += node->data + "\n";
+                out = DestroyNode(node->left, out);
+                out = DestroyNode(node->right, out);
+                node->state = true;
+            }
             delete node;
             countElement--;
         }
+        return out;
     }
 
     void BinTree::insert(std::string _data) {
@@ -43,11 +48,12 @@ namespace KVA {
 
     }
 
-    void BinTree::clearTree() {
-        DestroyNode(root);
+    std::string BinTree::clearTree(std::string out) {
+        out = DestroyNode(root, out);
         root = nullptr;
         empty = true;
         countElement = 0;
+        return out;
     }
 
     int BinTree::getCountElement() const {
@@ -55,7 +61,7 @@ namespace KVA {
     }
 
     void BinTree::findElement(std::string _data) {
-        Node* tmp;
+        Node *tmp;
         std::string out;
         Node::findElement(root, _data, out);
     }

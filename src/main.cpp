@@ -8,11 +8,11 @@
 
 using namespace KVA;
 
-void loadFromFile(any &param) {
+void loadDict(any &param) {
     auto *bt = any_cast<BinTree *>(param);
     fstream file;
     string s;
-    file.open("../itog.txt"); //работает
+    file.open("itog.txt"); //работает
     while (getline(file, s)) {
         bt->insert(s);
     }
@@ -27,7 +27,23 @@ void addToTree(any &param) {
     bt->insert(_data);
     std::cout << "Слово успешно добавлено!\n";
 }
-
+void InitData(string file_name, BinTree *bt) {
+    fstream file;
+    string s;
+    file.open(file_name);
+    while (getline(file, s)) {
+        bt->insert(s);
+    }
+    file.close();
+}
+void SaveData(string file_name, BinTree *bt) {
+    ofstream file;
+    string s;
+    file.open(file_name, std::ios::out);
+    s = bt->clearTree(s);
+    file << s;
+    file.close();
+}
 void printTree(any &param) {
     auto *bt = any_cast<BinTree *>(param);
     if (bt->getCountElement() == 0) cout << "Словарь пуст.\n";
@@ -61,7 +77,7 @@ void deleteEl(any &param) {
 
 void clearTree(any &param) {
     auto *bt = any_cast<BinTree *>(param);
-    bt->clearTree();
+    bt->clearTree("");
     cout << "Очистка словаря завершена.\n";
 }
 
@@ -82,8 +98,15 @@ void checkWord(any &param) {
     bt->findElement(_data);
 }
 
+void ext(any& param) {
+    auto *bt = any_cast<BinTree *>(param);
+    cout << "Выполняется сохранение данных в выходной файл";
+    SaveData("data2.txt", bt);
+    exit(0);
+}
+
 string MyException::file_name = "logs.txt";
-const int ITEMS_MENU = 7;
+const int ITEMS_MENU = 8;
 
 int main(int argc, char *argv[]) {
     std::string load_data_file = "data1.txt";
@@ -97,14 +120,16 @@ int main(int argc, char *argv[]) {
     MyException::setFileName(log_data_file);
 
     BinTree *bt = new BinTree();
+    InitData(load_data_file, bt);
     MenuItem items[ITEMS_MENU]{
             MenuItem{"Добавить слово в словарь", addToTree},
             MenuItem{"Распечатать словарь", printTree},
             MenuItem{"Удалить слово из словаря", deleteEl},
             MenuItem{"Очистить словарь", clearTree},
-            MenuItem{"Загрузить в словарь существительные (51301 слово)", loadFromFile},
+            MenuItem{"Загрузить в словарь существительные (51301 слово)", loadDict},
             MenuItem{"Получить количество слов в словаре", getCountWord},
-            MenuItem{"Проверить правописание слова", checkWord}
+            MenuItem{"Проверить правописание слова", checkWord},
+            MenuItem{"Выход из программы", ext}
     };
     MyMenu menu("Словарь слов русского языка", items, ITEMS_MENU);
     any param = bt;

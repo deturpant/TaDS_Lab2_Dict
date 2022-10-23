@@ -11,6 +11,7 @@ namespace KVA {
 
     class Node {
     public:
+        bool state = 0;
         std::string data = "";
         Node *left = nullptr;
         Node *right = nullptr;

@@ -20,7 +20,7 @@ namespace KVA {
         void print(int n);
 
         void deleteEl(std::string _data);
-        void clearTree();
+        std::string clearTree(std::string out);
         void findElement(std::string _data);
 
         int getCountElement() const;
@@ -28,7 +28,7 @@ namespace KVA {
     private:
         Node *root;
         bool empty = true;
-        void DestroyNode(Node *node);
+        std::string DestroyNode(Node *node, std::string out);
         int countElement{};
     };
 
