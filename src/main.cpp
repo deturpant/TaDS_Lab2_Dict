@@ -74,7 +74,6 @@ void deleteEl(vector<any> params) {
     std::cout << "Пожалуйста, введите слово для удаления  --> ";
     std::string _data;
     std::cin >> _data;
-    //нужно допилить!
     bt->deleteEl(_data);
     std::cout << "Слово успешно удалено!\n";
 }
@@ -113,9 +112,14 @@ void ext(vector<any> params) {
     SaveData(out, bt);
     exit(0);
 }
-
+void saveInformation(vector<any> params) {
+    LOAD_TREE
+    LOAD_OUTPUT_FILE
+    cout << "Выполняется сохранение данных в выходной файл";
+    SaveData(out, bt);
+}
 string MyException::file_name = "logs.txt";
-const int ITEMS_MENU = 8;
+const int ITEMS_MENU = 9;
 
 int main(int argc, char *argv[]) {
     std::string load_data_file = "data1.txt";
@@ -139,6 +143,7 @@ int main(int argc, char *argv[]) {
             MenuItem{"Загрузить в словарь 1.500.000+ русских слов", loadDictBig},
             MenuItem{"Получить количество слов в словаре", getCountWord},
             MenuItem{"Проверить правописание слова", checkWord},
+            MenuItem{"Сохранить данные в выходной файл", saveInformation},
             MenuItem{"Выход из программы", ext}
     };
     MyMenu menu("Словарь слов русского языка", items, ITEMS_MENU);
