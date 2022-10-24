@@ -5,7 +5,11 @@
 #include "Node.h"
 #include <iostream>
 #include <vector>
-
+#include <codecvt>
+#include <locale>
+#include <set>
+#include <algorithm>
+#include "../Exceptions/MyException.h"
 namespace KVA {
     Node *Node::insertNode(Node *_root, std::string _data) {
         if (_root == nullptr) {
@@ -34,20 +38,32 @@ namespace KVA {
         }
 
     }
-    Node *Node::findElement(KVA::Node *_root, std::string _data, std::string out, std::vector<std::string> list) {
-        if (_root!=nullptr && checkWords(_data, _root->data) <= 3 && checkWords(_data, _root->data) > 0) {
-            list.push_back(_root->data);
-        }
+
+    Node *Node::findElement(const KVA::Node *main_root, KVA::Node *_root, std::string _data, std::string out) {
         if (_root == nullptr) {
-            if (out=="") {
-                std::cout << "Слово отсуствует в словаре!\n";
-            }
-            if (list.size()>0) {
-                std::cout << "Обнаружены похожие слова:\n";
-                for (auto s : list) {
-                    std::cout << s << std::endl;
+            if (out == "") {
+                std::cout << "Слово отсуствует в словаре!\nПоискать похожие слова?\n1) Да\n2) Нет\n==> ";
+                int ind{};
+                std::cin >> ind;
+                switch(ind) {
+                    case 1: {
+                        Node *tmp = new Node;
+                        tmp->data = main_root->data;
+                        tmp->right = main_root->right;
+                        tmp->left = main_root->left;
+                        try {
+                            DirectBypass(tmp, _data);
+                        }
+                        catch (const MyException &ex) {
+                            break;
+                        }
+                    }
+                    case 2:
+                        break;
+                    default:
+                        break;
                 }
-                std::cout << std::endl;
+
             }
             return nullptr;
         }
@@ -57,16 +73,17 @@ namespace KVA {
             return _root;
         }
         if (_data < _root->data) {
-            _root->left = findElement(_root->left, _data, out, list);
+            _root->left = findElement(main_root, _root->left, _data, out);
             return _root;
         }
         if (_data > _root->data) {
-            _root->right = findElement(_root->right, _data, out, list);
+            _root->right = findElement(main_root, _root->right, _data, out);
             return _root;
         }
         return _root;
 
     }
+
     Node *Node::deleteNode(Node *_root, std::string _data) {
         if (_root == nullptr) {
             return nullptr;
@@ -111,29 +128,32 @@ namespace KVA {
     }
 
     int Node::checkWords(std::string data1, std::string data2) {
-        const char* cs1 = data1.c_str();
-        const char* cs2 = data2.c_str();
-        if (data1.length()!= data2.length()) {
+        std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> converter;
+        std::wstring _data1 = converter.from_bytes(data1);
+        std::wstring _data2 = converter.from_bytes(data2);
+        //std::cout << data1 << " | _data1.size() = " << _data1.size() << " | _data2.size() = " << _data2.size() << std::endl;
+        if (_data1.size() != _data2.size()) {
             return -1;
         }
         int counter{};
-        for (int i = 0; i<data2.length(); i++) {
-            if (data1[i] == data2[i]) {
+        //std::cout << "data1 = " << data1 << " | data2 = " << data2 << std::endl;
+        for (int i = 0; i < _data1.size(); i++) {
+            //std::cout << "_data1[" << i << "] = " << _data1[i] << " | _data2[" << i << "] = " << _data2[i] << std::endl;
+            if (_data1[i] == _data2[i]) {
                 counter++;
             }
         }
 
-        return (data1.length() - counter);
+        return _data1.length() - counter;
     }
-    /*int Node::length(const char* string_ptr){
-        int count = 0;
-        constchar *p = string_ptr;
-        while (*p != 0)
-        {
-            if ((*p & 0x80) == 0 || (*p & 0xc0) == 0xc0)
-                count++;
-            p++;
+    Node *Node::DirectBypass(Node *_root, std::string _data1) {
+        if (_root == nullptr) return nullptr;
+        if (checkWords(_root->data, _data1) <2 && checkWords(_root->data, _data1) > 0) {
+            std::cout << "Обнаружено похожее слово: " << _root->data << std::endl;
         }
-        return count;
-    }*/
+        DirectBypass(_root->left, _data1);
+        DirectBypass(_root->right, _data1);
+    }
+
+
 } // KVA

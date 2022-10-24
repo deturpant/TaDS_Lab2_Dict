@@ -5,22 +5,14 @@
 #include <string>
 #include <any>
 #include <fstream>
-#include <cstring>
+#include <locale>
+#include <codecvt>
+#include <limits>
 
 #define LOAD_TREE auto *bt = any_cast<BinTree *>(param);
 
 using namespace KVA;
 
-void loadDictSmall(any &param) {
-    LOAD_TREE
-    fstream file;
-    string s;
-    file.open("itog.txt");
-    while (getline(file, s)) {
-        bt->insert(s);
-    }
-    file.close();
-}
 void loadDictBig(any &param) {
     LOAD_TREE
     fstream file;
@@ -101,7 +93,11 @@ void getCountWord(any &param) {
         cout << "Словарь пуст";
     }
 }
-
+void clearCIN() {
+    std::cin.clear();
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    std::cin.clear();
+}
 void checkWord(any &param) {
     LOAD_TREE
     std::cout << "Пожалуйста, введите слово для проверки  --> ";
@@ -118,7 +114,7 @@ void ext(any& param) {
 }
 
 string MyException::file_name = "logs.txt";
-const int ITEMS_MENU = 9;
+const int ITEMS_MENU = 8;
 
 int main(int argc, char *argv[]) {
     std::string load_data_file = "data1.txt";
@@ -130,6 +126,8 @@ int main(int argc, char *argv[]) {
         log_data_file = argv[3];
     }
     MyException::setFileName(log_data_file);
+
+
     BinTree *bt = new BinTree();
     InitData(load_data_file, bt);
     MenuItem items[ITEMS_MENU]{
@@ -137,7 +135,6 @@ int main(int argc, char *argv[]) {
             MenuItem{"Распечатать словарь", printTree},
             MenuItem{"Удалить слово из словаря", deleteEl},
             MenuItem{"Очистить словарь", clearTree},
-            MenuItem{"Загрузить в словарь существительные (51.000+ слов)", loadDictSmall},
             MenuItem{"Загрузить в словарь 1.500.000+ русских слов", loadDictBig},
             MenuItem{"Получить количество слов в словаре", getCountWord},
             MenuItem{"Проверить правописание слова", checkWord},
@@ -150,7 +147,8 @@ int main(int argc, char *argv[]) {
             menu.runCommand(param);
         }
         catch (const MyException &ex) {
-            cout << "Error: " << ex.getError() << "\n";
+            cout << "\nError: " << ex.getError() << "\n";
+            clearCIN();
         }
     }
 
