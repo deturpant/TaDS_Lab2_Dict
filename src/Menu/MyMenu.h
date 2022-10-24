@@ -7,12 +7,13 @@
 
 #include "MenuItem.h"
 #include "../Exceptions/MyException.h"
+#include <vector>
 namespace KVA {
 
     class MyMenu {
     public:
         using func_type = void (*)(any &param);
-
+        using func_type2 = void(*)(std::vector<any> params);
         MyMenu();
 
         MyMenu(string _name, MenuItem *items, size_t count);
@@ -20,6 +21,7 @@ namespace KVA {
         void print();
 
         void runCommand(any &param);
+        void runCommand(std::vector<any> params);
 
     private:
         int m_select{-1};

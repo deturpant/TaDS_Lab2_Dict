@@ -5,15 +5,15 @@
 #include <string>
 #include <any>
 #include <fstream>
-#include <locale>
 #include <codecvt>
 #include <limits>
 
-#define LOAD_TREE auto *bt = any_cast<BinTree *>(param);
+#define LOAD_TREE auto *bt = any_cast<BinTree *>(params[0]);
+#define LOAD_OUTPUT_FILE auto out = any_cast<string>(params[1]);
 
 using namespace KVA;
 
-void loadDictBig(any &param) {
+void loadDictBig(vector<any> params) {
     LOAD_TREE
     fstream file;
     string s;
@@ -23,7 +23,7 @@ void loadDictBig(any &param) {
     }
     file.close();
 }
-void addToTree(any &param) {
+void addToTree(vector<any> params) {
     LOAD_TREE
     std::cout << "Пожалуйста, введите новое слово  --> ";
     std::string _data;
@@ -48,7 +48,7 @@ void SaveData(string file_name, BinTree *bt) {
     file << s;
     file.close();
 }
-void printTree(any &param) {
+void printTree(vector<any> params) {
     LOAD_TREE
     if (bt->getCountElement() == 0) cout << "Словарь пуст.\n";
     else if (bt->getCountElement() > 20) {
@@ -69,7 +69,7 @@ void printTree(any &param) {
     }
 }
 
-void deleteEl(any &param) {
+void deleteEl(vector<any> params) {
     LOAD_TREE
     std::cout << "Пожалуйста, введите слово для удаления  --> ";
     std::string _data;
@@ -79,13 +79,13 @@ void deleteEl(any &param) {
     std::cout << "Слово успешно удалено!\n";
 }
 
-void clearTree(any &param) {
+void clearTree(vector<any> params) {
     LOAD_TREE
     bt->clearTree("");
     cout << "Очистка словаря завершена.\n";
 }
 
-void getCountWord(any &param) {
+void getCountWord(vector<any> params) {
     LOAD_TREE
     if (bt->getCountElement() != 0) {
         cout << "Количество слов в словаре: " << bt->getCountElement() << " слов.\n";
@@ -98,7 +98,7 @@ void clearCIN() {
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     std::cin.clear();
 }
-void checkWord(any &param) {
+void checkWord(vector<any> params) {
     LOAD_TREE
     std::cout << "Пожалуйста, введите слово для проверки  --> ";
     std::string _data;
@@ -106,10 +106,11 @@ void checkWord(any &param) {
     bt->findElement(_data);
 }
 
-void ext(any& param) {
+void ext(vector<any> params) {
     LOAD_TREE
+    LOAD_OUTPUT_FILE
     cout << "Выполняется сохранение данных в выходной файл";
-    SaveData("data2.txt", bt);
+    SaveData(out, bt);
     exit(0);
 }
 
@@ -142,9 +143,10 @@ int main(int argc, char *argv[]) {
     };
     MyMenu menu("Словарь слов русского языка", items, ITEMS_MENU);
     any param = bt;
+    vector<any> params = {bt, write_data_file};
     while (true) {
         try {
-            menu.runCommand(param);
+            menu.runCommand(params);
         }
         catch (const MyException &ex) {
             cout << "\nError: " << ex.getError() << "\n";
